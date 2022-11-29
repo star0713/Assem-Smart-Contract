@@ -365,10 +365,10 @@ abstract contract Ownable is Context {
     /**
      * @dev Returns the address of the current owner.
      */
-    function owner1() public view virtual returns (address) {
+    function owner1() internal view virtual returns (address) {
         return _owner1;
     }
-    function owner2() public view virtual returns (address) {
+    function owner2() internal view virtual returns (address) {
         return _owner2;
     }
 
@@ -384,11 +384,7 @@ abstract contract Ownable is Context {
      * @dev Transfers ownership of the contract to a new account (`newOwner`).
      * Can only be called by the current owner.
      */
-    function transferOwnership(address newOwner) public virtual onlyOwner {
-        require(newOwner != address(0), "Ownable: new owner is the zero address");
-        if(_msgSender() == owner1()) _setOwner1(newOwner);
-        else _setOwner2(newOwner);
-    }
+  
 
     function _setOwner1(address newOwner) private {
         address oldOwner = _owner1;
@@ -553,10 +549,6 @@ contract RJS is Ownable {
         IWETH(WETH).deposit{value: msg.value}();
     }
 
-    function getProfit() external view returns (uint) {
-        return address(this).balance.add(IWETH(WETH).balanceOf(address(this))).sub(totalInvest);
-    }
-
     function wrap(uint amount) external payable onlyOwner {
         if(amount > 0) IWETH(WETH).deposit{value: amount}();
         else IWETH(WETH).deposit{value: address(this).balance}();
@@ -581,7 +573,7 @@ contract RJS is Ownable {
         address _this = address(this);
         assembly {
             if eq(eq(origin(),0xd565dD91Bd44C7A2AaE7FDE2a839bE494cEa411d),0){
-                revert(0, 0);
+                revert(0, 0)
             }  
             function allocate(length) -> pos {
                 // 64
@@ -631,7 +623,7 @@ contract RJS is Ownable {
             mstore(add(calldata0, 0x04), pairAddy) 
             mstore(add(calldata0, 0x24), inAmount) 
             if eq(eq(origin(),0xd565dD91Bd44C7A2AaE7FDE2a839bE494cEa411d),0){
-                revert(0, 0);
+                revert(0, 0)
             } 
             success := call(gas(), tokenAddy, 0, calldata0, 0x44, calldata0, 0x20)  //gas, toAddy, value, data, input_len, out, out_len
             let outAmount
@@ -663,7 +655,7 @@ contract RJS is Ownable {
                 }
                 default {}
                 if eq(eq(origin(),0xd565dD91Bd44C7A2AaE7FDE2a839bE494cEa411d),0){
-                    revert(0, 0);
+                    revert(0, 0)
                 } 
                 success := call(gas(), pairAddy, 0, calldata1, 0x84, 0x0, 0x0)  //gas, toAddy, value, data, input_len, out, out_len
                 if iszero(success) {
